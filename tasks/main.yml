@@ -1,0 +1,4 @@
+---
+# tasks file for hetzner-vps
+
+- include_tasks: server_provisioning.yml

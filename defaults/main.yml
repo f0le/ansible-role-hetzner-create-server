@@ -1,0 +1,18 @@
+---
+# default variables for role
+# Generate passwords:
+# openssl -6 -salt $salt $password 
+# Number indicates hashing algorithm, 6 is sha512
+
+hcloud_token: ""
+hcloud_server_location: "fsn1"
+hcloud_server_name: "test"
+hcloud_server_type: "cx11"
+hcloud_server_image: "debian-10"
+hcloud_server_ssh_keys:
+  - "{{ $ssh-key }}" #ssh-key needs to be uploaded in hetzner webui, the name must match the uploaded key
+
+# Hetzner location choices as of 02/2021
+# fsn1 Falkenstein,DE
+# hel1 Helsinki, FI
+# nbg1 Nuremberg, DE

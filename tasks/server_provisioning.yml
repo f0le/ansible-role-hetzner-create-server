@@ -1,0 +1,57 @@
+---
+# This playbook creates and provisions a vps with hetzner
+# vars are sourced from default dir
+
+  - name: create server
+    hcloud_server:
+      api_token: "{{ hcloud_token }}"
+      image: "{{ hcloud_server_image }}"
+      name: "{{ hcloud_server_name }}"
+      server_type: "{{ hcloud_server_type }}"
+      state: present
+      upgrade_disk: false
+      backups: true
+      location: "{{ hcloud_server_location }}"
+      # delete_protection: yes   # switch this off for testing
+      # rebuild_protection: yes  # switch this off for testing
+      endpoint: "https://api.hetzner.cloud/v1"
+      ssh_keys: "{{ hcloud_server_ssh_keys }}"
+      # if ssh-key is provided root password will be null. Ssh-key must be configured in the hetzner webui
+    register: server
+    ignore_errors: true
+
+  - name: print status
+    debug:
+      msg:
+        - "finished creating {{ server.hcloud_server.name }}"
+        - "id: {{ server.hcloud_server.id }}"
+        - "type:        {{ server.hcloud_server.server_type }}"
+        - "status:      {{ server.hcloud_server.status }}"
+        - "datacenter:  {{ server.hcloud_server.datacenter }}"
+        - "{{ hcloud_server_name }}  IN A     {{ server.hcloud_server.ipv4_address}}"
+        - "{{ hcloud_server_name }}  IN AAAA  {{ server.hcloud_server.ipv6 }}"
+
+  - name: Wait until vps is up
+    wait_for:
+      host: "{{ server.hcloud_server.ipv4_address}}"
+      port: 22
+      state: started
+
+  - name: Get public key
+    shell: "ssh-keyscan {{ server.hcloud_server.ipv4_address }}" # ssh-keyscan is shipped with openssh
+    register: ssh_public_key
+    retries: 5
+
+  - name: Add ssh key to known hosts file
+    known_hosts:
+      name: "{{ server.hcloud_server.ipv4_address }}"
+      path: "{{ ssh_known_hosts_path }}"
+      key: "{{ item }}"
+      state: present
+    loop: "{{ ssh_public_key.stdout_lines }}"
+    ignore_errors: true
+
+  - debug:
+      msg:
+        - "{{ server }}"
+        - server.stdout
