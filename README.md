@@ -1,4 +1,4 @@
-Role Name
+Hetzner-create-server
 =========
 
 Spins up a hetzner vps and optionally adds an ansible user with sudo privileges.
@@ -48,7 +48,7 @@ Including an example of how to use your role (for instance, with variables passe
 
     - hosts: servers
       roles:
-         - { role: username.rolename, x: 42 }
+         - { role: hetzner-create-server }
 
 License
 -------
@@ -58,4 +58,4 @@ GPLv3
 Author Information
 ------------------
 
-[folie.dev](#https://folie.dev)
+[folie.dev](https://folie.dev)
