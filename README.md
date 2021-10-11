@@ -1,10 +1,16 @@
 Hetzner-create-server
 =========
 
-Spins up a hetzner vps and optionally adds an ansible user with sudo privileges.
+Spins up a hetzner VPS
 
 Requirements
 ------------
+
+[hcloud-python](https://github.com/hetznercloud/hcloud-python)
+
+Install with:
+
+    pip install hcloud
 
 Setting up a project in Hetzner WebUI is needed, as well as an api-token and a ssh-key.
 
